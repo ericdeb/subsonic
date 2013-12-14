@@ -99,9 +99,9 @@ ${model.artistName}
 			<c:if test="${track.id != -1 && model.user.streamRole}">
 				<table>
 					<tr>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'P');"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'A');"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
+						<td><a href="javascript:noop()" onclick="top.playlist.sendPlaylistCommand(P_CMDS.PLAY.TRACKS, [${track.id}], P_MODES.PLAY);"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
+						<td><a href="javascript:noop()" onclick="top.playlist.sendPlaylistCommand(P_CMDS.PLAY.TRACKS, [${track.id}], P_MODES.ENQUEUE);"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
+						<td><a href="javascript:noop()" onclick="top.playlist.sendPlaylistCommand(P_CMDS.PLAY.TRACKS, [${track.id}], P_MODES.ADD);"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
 					</tr>
 				</table>
 			</c:if>

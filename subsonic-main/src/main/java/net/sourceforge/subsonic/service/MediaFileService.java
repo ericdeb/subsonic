@@ -33,6 +33,7 @@ import net.sourceforge.subsonic.domain.MediaFile;
 
 import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
+import com.github.hakko.musiccabinet.domain.model.music.Tag;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 
 /**
@@ -141,8 +142,11 @@ public class MediaFileService {
         boolean preferLastFmArtwork = settingsService.isPreferLastFmArtwork();
     	for (com.github.hakko.musiccabinet.domain.model.music.Album a : alb) {
         	Album album = new Album();
-        	album.setArtistId(a.getArtist().getId());
+            int artistId = a.getArtist().getId();
+        	album.setArtistId(artistId);
         	album.setArtistName(a.getArtist().getName());
+
+            
         	album.setId(a.getId());
         	album.setTitle(a.getName());
         	album.setYear(a.getYear());

@@ -3,42 +3,71 @@
 <html><head>
     <%@ include file="head.jspf" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
+    <style>
+
+    	#relatedTitle {
+    		font-size: 26px;
+    		font-weight:bold;
+    	}
+
+    	a:hover, a:hover {
+	        text-decoration: none;
+	    }
+    </style>
+    <script type="text/javascript" language="javascript">
+
+		function noop() {}
+
+	    function init() {
+	        $("#artistBio").children('a').attr("target", "_blank");
+		}
+	</script>
 </head>
-<body class="mainframe bgcolor1">
+<body class="mainframe bgcolor1" onload="init()">
 
-<div style="padding: 15px;">
+<div id="scrollWrapper">
 
-<sub:url value="artist.view" var="artistUrl"><sub:param name="id" value="${model.id}"/></sub:url>
+    <div id="scrollContainer">
 
-<h1>${model.artist}</h1>
-<table>
-	<tr>
-		<td style="vertical-align:top">
-			<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
-				<a href="${artistUrl}">
-					<img width="126" height="126" src="${model.artistInfo.largeImageUrl}" alt="">
-				</a>
-			</div></div></div></div>
-		</td>
-		<td style="vertical-align:top">
-			<div style="width:525px;">
-				${model.artistInfo.bioSummary}
-			</div>
-		</td>
-	</tr>
-</table>
+		<div style="padding: 15px;">
 
-<br>
-<h1><a href="javascript:noop()" onclick="top.playlist.onPlayRelatedArtistsSampler(${model.id}, ${fn:length(model.artists)});">
-		<img src="<spring:theme code="playImage"/>" alt="Play related artists sampler" title="Play related artists sampler">
-	</a>Related artists
-</h1>
+		<sub:url value="artist.view" var="artistUrl"><sub:param name="id" value="${model.id}"/></sub:url>
 
-<c:if test="${empty model.artists}"><p>Not a single related artist found!</p></c:if>
-<%@ include file="artists.jspf" %>
+		<h1 style="color: #D01073; font-weight:normal">${model.artist}</h1>
 
-<%@ include file="artistRecommendation.jspf" %>
+		<table>
+			<tr>
+				<td style="vertical-align:top">
+					<div id="artistBio" style="width:525px;">
+						${model.artistInfo.bioSummary}
+					</div>
+				</td>
+				<td style="vertical-align:top">
+					<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
+						<a href="${artistUrl}">
+							<img width="126" height="126" src="${model.artistInfo.largeImageUrl}" alt="">
+						</a>
+					</div></div></div></div>
+				</td>
+			</tr>
+		</table>
 
+		<br>
+		<span id="relatedTitle">Related artists</span>
+		<a href="javascript:noop()" onclick="top.playlist.sendPlaylistCommand(P_CMDS.PLAY.RELATED_ARTISTS_SAMPLER, ${model.id}, ${fn:length(model.artists)})">
+			<img src="icons/playButBig.png" width="23" height="23" alt="Play related artists sampler" title="Play related artists sampler" style="position: relative; bottom: 5px; left: 2px;">
+		</a>
+		<div style="height: 10px">
+		</div>
+
+
+		<c:if test="${empty model.artists}"><p>Not a single related artist found!</p></c:if>
+		<%@ include file="artists.jspf" %>
+
+		<%@ include file="artistRecommendation.jspf" %>
+
+		</div>
+	</div>
 </div>
 
 </body></html>

@@ -187,7 +187,7 @@ img {
 
 .detail, .detailSelected {
     white-space: nowrap;
-    font-size: 8pt;
+    font-size: 12px;
     line-height: 1.25em;
 }
 
@@ -221,7 +221,7 @@ img {
 
 .log {
     white-space: nowrap;
-    font-size: 8pt;
+    font-size: 12px;
     line-height: 1em;
 }
 

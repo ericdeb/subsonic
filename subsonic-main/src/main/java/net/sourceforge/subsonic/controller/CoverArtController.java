@@ -109,10 +109,10 @@ public class CoverArtController implements Controller, LastModified {
     private void sendDefault(Integer size, HttpServletResponse response) throws IOException {
         InputStream in = null;
         try {
-            in = getClass().getResourceAsStream("default_cover.jpg");
+            in = getClass().getResourceAsStream("default_cover.png");
             BufferedImage image = ImageIO.read(in);
             image = scale(image, size, size);
-            ImageIO.write(image, "jpeg", response.getOutputStream());
+            ImageIO.write(image, "png", response.getOutputStream());
         } finally {
             IOUtils.closeQuietly(in);
         }

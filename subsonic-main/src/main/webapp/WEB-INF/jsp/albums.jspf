@@ -2,7 +2,7 @@
 	<c:choose>
 		<c:when test="${not empty album.coverArtUrl}"><c:set var="coverArtUrl">${album.coverArtUrl}</c:set></c:when>
 		<c:otherwise>
-			<sub:url value="coverArt.view" var="coverArtUrl">
+			<sub:url value="icons/disc.png" var="coverArtUrl">
 				<sub:param name="size" value="174"/>
 				<c:if test="${not empty album.coverArtPath}"><sub:param name="path" value="${album.coverArtPath}"/></c:if>
 			</sub:url>
@@ -15,7 +15,7 @@
 					<img id="albart${i.count}" width="87" height="87" src="${coverArtUrl}" alt="">
 				</a>
 			</div></div></div></div>
-			<div id="albcmd${i.count}" style="display:none;float:right;padding-right:10px;padding-bottom:15px;text-align:right" class="detail">
+			<div id="albcmd${i.count}" style="display:none;float:left;padding-right:10px;padding-bottom:15px;text-align:right" class="detail">
 				<c:import url="playAddDownload.jsp">
 					<c:param name="id" value="${album.trackIds}"/>
 					<c:param name="starDisabled" value="true"/>
@@ -27,7 +27,7 @@
 					<c:param name="asTable" value="false"/>
 				</c:import>
 
-				<c:choose>
+<!-- 				<c:choose>
 					<c:when test="${not empty album.coverArtZoomUrl or not empty album.coverArtUrl}">| <a rel="zoom" href="${album.coverArtZoomUrl}">Zoom</a></c:when>
 					<c:otherwise><c:choose>
 						<c:when test="${not empty album.coverArtPath}">
@@ -63,13 +63,13 @@
 						<sub:param name="ids" value="${album.trackIds}"/>
 					</sub:url>
 					<a href="${shareUrl}">Share</a>
-				</c:if>
+				</c:if> -->
 				
 			</div>
 		</div>
 		<div style="float:left;padding-left:10px;padding-bottom:15px">
 			<div>
-				<a href="#" onclick="toggleStar('alb', ${album.id}, '#starImage${album.id}'); return false;">
+<!-- 				<a href="#" onclick="toggleStar('alb', ${album.id}, '#starImage${album.id}'); return false;">
 					<c:choose>
 						<c:when test="${model.isAlbumStarred[i.index]}">
 							<img id="starImage${album.id}" src="<spring:theme code="ratingOnImage"/>" alt="">
@@ -78,8 +78,8 @@
 							<img id="starImage${album.id}" src="<spring:theme code="ratingOffImage"/>" alt="">
 						</c:otherwise>
 					</c:choose>
-				</a>
-				<a href="javascript:noop()" onclick="toggleAlbum(${i.count})">
+				</a> -->
+				<a id="albumTitleLink" href="javascript:noop()" onclick="toggleAlbum(${i.count})">
 					<b><c:if test="${not empty album.artistName}">${album.artistName} - </c:if>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if>
 				</a>
 				<c:if test="${album.artistId != model.artistId}"> <a href="artist.view?id=${album.artistId}&albumId=${album.id}">&raquo;</a></c:if>

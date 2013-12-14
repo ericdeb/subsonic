@@ -3,32 +3,56 @@
         <c:if test="${loopStatus.count % model.artistGridWidth == 1}">
 	        <tr>
    	    </c:if>
-		<td style="vertical-align:top">
-			<a href="artist.view?id=${album.artistId}&albumId=${album.id}">
+		<td style="vertical-align:top; width:400px; padding-bottom:40px">
+			<a href="artist.view?id=${album.artistId}&albumId=${album.id}" style="float: left">
 				<c:choose>
 					<c:when test="${not empty album.coverArtUrl}"><c:set var="coverArtUrl">${album.coverArtUrl}</c:set></c:when>
 					<c:otherwise>
-						<sub:url value="coverArt.view" var="coverArtUrl">
+						<sub:url value="icons/disc.png" var="coverArtUrl">
 							<sub:param name="size" value="126"/>
 							<c:if test="${not empty album.coverArtPath}"><sub:param name="path" value="${album.coverArtPath}"/></c:if>
 						</sub:url>
 					</c:otherwise>
 				</c:choose>
-				<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
-					<img width="126" height="126" src="${coverArtUrl}" alt="" title="${album.artistName} - ${album.title}">
-				</div></div></div></div>
-				<div style="detail">
-					<div style="width:108px;float:left">
-						<div class="detail"><em><str:truncateNicely lower="14" upper="14">${album.artistName}</str:truncateNicely></em></div>
-						<div class="detail"><str:truncateNicely lower="14" upper="14">${album.title}</str:truncateNicely></div>
-					</div>
-					<div style="width:18px;float:right">
-						<a href="javascript:noop()" onclick="top.playlist.onPlay(${album.trackIds}, 'P');">
-			                <img src="<spring:theme code="playImage"/>" alt="Play album" title="Play album">
+<!-- 				<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox"> -->
+				<img style="float: left; position: relative" width="90" height="90" src="${coverArtUrl}" alt="" title="${album.artistName} - ${album.title}">
+			</a>
+<!-- 				</div></div></div></div> -->
+			<div style="float: left;">
+				<div style="float:left;position:relative;left:18px;top:2px">
+					<div class="detailAlbumTitle">
+						<a href="artist.view?id=${album.artistId}&albumId=${album.id}" style="font-weight:bold">
+							<str:truncateNicely lower="25" upper="25">${album.title}</str:truncateNicely>
 						</a>
 					</div>
+					<div class="otherDets" style="margin-top:15px">
+						<div class="detail">
+							<a href="artist.view?id=${album.artistId}">
+								<str:truncateNicely lower="25" upper="25">${album.artistName}</str:truncateNicely>
+							</a>
+						</div>
+						<c:if test="${not (album.year == 0)}">
+							<div class="detail">
+								<span>${album.year}</span>
+							</div>
+						</c:if>
+						<c:if test="${not empty album.artistGenre}">
+							<div class="detail">
+								<sub:url var="url" value="genres.view">
+									<sub:param name="genre" value="${album.artistGenre}"/>
+								</sub:url>
+								<a class="artistGenre" href="${url}">${album.artistGenre}</a>
+							</div>
+						</c:if>
+					</div>
+					
 				</div>
-			</a>
+<!-- 				<div style="width:18px;float:right">
+					<a href="javascript:noop()" onclick="top.playlist.onPlay(${album.trackIds}, 'P');">
+		                <img src="<spring:theme code="playImage"/>" alt="Play album" title="Play album">
+					</a>
+				</div> -->
+			</div>
 		</td>
         <c:if test="${loopStatus.count % model.artistGridWidth == 0}">
             </tr>

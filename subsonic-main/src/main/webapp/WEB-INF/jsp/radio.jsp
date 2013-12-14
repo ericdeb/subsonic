@@ -3,7 +3,7 @@
 <html><head>
     <%@ include file="head.jspf" %>
 
-	<style type="text/css">
+    <style type="text/css">
 span.off {
     cursor: pointer;
     float:left;
@@ -15,7 +15,7 @@ span.off {
     -moz-border-radius: 7px;
     border-radius: 7px;
     border: solid 1px #CCC;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
     -webkit-transition-duration: 0.1s;
     -moz-transition-duration: 0.1s;
     transition-duration: 0.1s;
@@ -31,16 +31,16 @@ span.on {
     float:left;
     padding: 2px 6px;
     margin: 2px;
-    background: #9E7;
+    background: #6A4;
     color: #000;
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
     border-radius: 7px;
-    border: solid 1px #999;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    border: solid 1px #444;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 0px 1px rgba(0, 0, 0, 0.6);
     -webkit-transition-duration: 0.1s;
     -moz-transition-duration: 0.1s;
     transition-duration: 0.1s;
@@ -52,54 +52,78 @@ span.on {
 }
 
 span.off:hover {
-    background: #9E7;opacity:0.7;
-    border: solid 1px #999;
+    background: #6A4;
+    border: solid 1px #666;
     text-decoration: none;
 }
-	</style>
-	
-	<script type="text/javascript">
 
-function changeClass(elem, className1,className2) {
-    elem.className = (elem.className == className1)?className2:className1;
+#playRadio {
+    position: relative;
+    top: 40px;
+    font-size: 32px;
+}
+
+a:hover, a:hover {
+    text-decoration: none;
+    color: #005580;
+}
+
+</style>
+    
+<script type="text/javascript">
+
+function init() {
+
+    $(".radioBut").click(function() {
+        var rem = 'on', add = 'off';
+        if ($(this).hasClass("off")) {
+            rem = 'off', add='on';
+        }
+        $(this).removeClass(rem).addClass(add);
+    })
+
 }
 function playGenreRadio() {
-	var genres = new Array();
-	var e = document.getElementsByTagName("span");
-	for (var i = 0; i < e.length; i++) {
-		if (e[i].className == "on") {
-			genres.push(e[i].firstChild.data);
-		}
-	}
-	top.playlist.onPlayGenreRadio(genres);
+    var genres = new Array();
+    $('span.on').each(function() {
+        genres.push($(this).text());
+    });
+    top.playlist.sendPlaylistCommand(PLAYLIST_COMMANDS.PLAY.GENRE_RADIO, genres);
 }
-	</script>
+
+function noop() {}
+
+
+</script>
 
 </head>
-<body class="mainframe bgcolor1">
+<body class="mainframe bgcolor1" onload="init()">
 
-<h1>
-    <img src="<spring:theme code="radioImage"/>" alt="">
-    Radio
-</h1>
+<div id="scrollWrapper" style="max-width:900px">
 
-<c:choose>
-    <c:when test="${empty model.topTags}">
-    	<p>Please configure which genres to use <a href="tagSettings.view">here</a>.
-    </c:when>
-    <c:otherwise>
-		<p>Choose one or more genres.</p>
+    <div id="scrollContainer" style="padding-top:40px;">
 
-		<c:forEach items="${model.topTags}" var="topTag">
-			<span class="off" onclick='changeClass(this,"on","off");'>${topTag}</span>
-		</c:forEach>
+        <c:choose>
+            <c:when test="${empty model.topTags}">
+                <p>Please configure which genres to use <a href="tagSettings.view">here</a>.
+            </c:when>
+            <c:otherwise>
+                <div style="margin-bottom: 30px">
+                    <span style="font-size: 40px; color: #D01073">Choose one or more genres:</span>
+                </div>
 
-		<div style="clear:both"/>
+                <c:forEach items="${model.topTags}" var="topTag">
+                    <span class="radioBut off">${topTag}</span>
+                </c:forEach>
 
-		<form>
-			<input type="button" value="Play radio!" onClick="playGenreRadio();">
-		</form> 
-    </c:otherwise>
-</c:choose>
+                <div style="clear:both"/>
+
+                <div>
+                    <a id="playRadio" onClick="playGenreRadio();" href="javascript:noop()">Play Radio </a>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</div>
 
 </body></html>
