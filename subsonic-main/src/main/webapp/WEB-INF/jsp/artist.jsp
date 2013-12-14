@@ -1,136 +1,20 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%--@elvariable id="model" type="java.util.Map"--%>
+<div id="artistWrapper" class="mainframe bgcolor1" onload="artistInit()">
 
-<html><head>
-	<%@ include file="head.jspf" %>
-	<link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
-	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap-responsive.min.css">
-	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-	<style>
-	    #playEnqAdd, #playEnqAddOptions {
-	        width:95px;
-	        font-size: 12px;
-			height: 22px;
-			padding: 0px;
-	    }
-
-	    #selectPlayBut img {
-	    	position: relative;
-			bottom: 5px;
-			left: 5px;
-	    }
-
-	    #playEnqAddOptions {
-	    	margin-left: 5px;
-	    }
-
-	    #selectDiv {
-	    	margin-top: 12px;
-	    	margin-bottom: 25px;
-	    }
-
-	    #genresLabel {
-	    	position: relative;
-	    }
-
-	    #artistDets a{
-	    	font-weight: bold;
-	    }
-
-	    #albumTitleLink:hover, #albumTitleLink:hover *{
-	    	text-decoration: none;
-	    }
-
-	    #albumTitleLink b {
-	    	font-size: 16px;
-	    }
-
-	    a:hover, a:hover {
-	        text-decoration: none;
-	    }
-    </style>
-</head><body class="mainframe bgcolor1" onload="init()">
-
+<!--
 <script type="text/javascript" language="javascript">
 
-	function noop() {}
-
-    function init() {
-        dwr.engine.setErrorHandler(null);
-
-        var trackIds = ${model.trackIds};
-        var artistId = ${model.artistId};
-
-        $("#selectPlayBut").click(function() {
-        	var playEnqAdd = $("#playEnqAdd option:selected");
-        	playMode = (playEnqAdd.text() === 'Add Last') ? 'Add' : playEnqAdd.text();
-        	var toPlay = $("#playEnqAddOptions option:selected").text();
-
-        	switch(toPlay) {
-				case 'All':
-					top.playlist.sendPlaylistCommand(P_CMDS.PLAY.TRACKS, trackIds, playEnqAdd.val());
-					break;
-				case 'Top Tracks':
-					top.playlist.sendPlaylistCommand(P_CMDS.PLAY.TOP_TRACKS, artistId, playEnqAdd.val());
-					break;
-				case 'Artist Radio':
-					top.playlist.sendPlaylistCommand(P_CMDS.PLAY.ARTIST_RADIO, artistId, playEnqAdd.val());
-					break;
-				case 'Random':
-					top.playlist.sendPlaylistCommand(P_CMDS.PLAY.RANDOM, trackIds, playEnqAdd.val());
-					break;
-			}
-        });
-
-        $("#bio0").children('a').attr("target", "_blank");
-	}
-
-	function playMode() {
-		return $('#togglePlayAdd').attr('class').substring(0, 1);
-	}
-	
-	function togglePlayAdd() {
-		var t = $('#togglePlayAdd');
-		if (t.attr('class') == 'Play') {
-			t.attr('class', 'Enqueue');
-		} else if (t.attr('class') == 'Enqueue') {
-			t.attr('class', 'Add');
-		} else {
-			t.attr('class', 'Play');
-		}
-		var ids = ['all','top_tracks','artist_radio','random'];
-		for (var i=0; i<ids.length; i++) {
-			if ($('#'+ids[i])) {
-				$('#'+ids[i]).html(t.attr('class') + ' ' + ids[i].replace(/_/g, ' '));
-			}
-		}
-	}
-
-<%@ include file="albumsHeader.jspf" %>
-
-	function toggleArtist() {
-		$('#bioArt').attr('width', 126 + 63 - $('#bioArt').attr('width'));
-		$('#bioArt').attr('height', 126 + 63 - $('#bioArt').attr('height'));
-
-		$('#bio0').toggle();
-		$('#bio1').toggle();
-	}
-
 	$(function() {
-		<c:forEach items="${model.albums}" var="album" varStatus="i">
-			<c:if test="${album.selected}">
-				toggleAlbum('${i.count}');
-				window.location.hash='alb${i.count}';
-			</c:if>
-		</c:forEach>
+	    <c:forEach items="${model.albums}" var="album" varStatus="i">
+	        <c:if test="${album.selected}">
+	            toggleAlbum('${i.count}');
+	            window.location.hash='alb${i.count}';
+	        </c:if>
+	    </c:forEach>
 	});
 </script>
+-->
+
+<%@ include file="albumsHeader.jspf" %>
 
 <%@ include file="toggleStar.jspf" %>
 
@@ -236,6 +120,3 @@
 		<%@ include file="albums.jspf" %>
 	</div>
 </div>
-
-</body>
-</html>

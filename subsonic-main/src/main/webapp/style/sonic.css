@@ -17,11 +17,11 @@
 }
 
 /* Background colour for selected header, log etc. */
-.headerSelected {
+/*.headerSelected {
     color: #696969;
     background-color: #e7e7e7;
     border: 1px solid #696969;
-}
+}*/
 
 
 /* The primary foreground color (black). */
@@ -51,14 +51,14 @@ table {
 }
 
 /* Back image */
-.back {
+/*.back {
     background-image:url( "../icons/sonic/back.png" );
-}
+}*/
 
 /* Forward image */
-.forward {
+/*.forward {
     background-image:url( "../icons/sonic/forward.png" );
-}
+}*/
 
 
 /* Link colour */
@@ -86,7 +86,7 @@ label, p {
 }
 
 /* Simple dark border. */
-.border1, .ruleTableHeader, .ruleTableCell, .headerSelected, .log {
+.border1, .ruleTableHeader, .ruleTableCell, .log {
     border: 1px solid black;
 }
 
@@ -181,9 +181,9 @@ img {
     vertical-align: middle;
 }
 
-.headerSelected {
+/*.headerSelected {
     padding: 0.25em;
-}
+}*/
 
 .detail, .detailSelected {
     white-space: nowrap;
@@ -211,13 +211,13 @@ img {
     line-height: 16px;
 }
 
-.back {
+/*.back {
     background-image:url("../icons/back.gif");
 }
 
 .forward {
     background-image:url("../icons/forward.gif");
-}
+}*/
 
 .log {
     white-space: nowrap;

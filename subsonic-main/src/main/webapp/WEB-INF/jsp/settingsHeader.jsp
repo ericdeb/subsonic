@@ -1,18 +1,6 @@
+<div id="settingsHeaderWrapper" style="max-width:980px; line-height: 30px">
+    <c:set var="categories" value="${param.restricted ? 'personal password player share' : 'mediaFolder general advanced personal user player share network transcoding internetRadio podcast search musicCabinet'}"/>
 
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<%@ include file="include.jspf" %>
-<style>
-    .headerSelected {
-        color: #D01073;
-    }
-
-    .headerSelected {
-        font-family: verdana, arial, sans-serif;
-    }
-</style>
-
-<c:set var="categories" value="${param.restricted ? 'personal password player share' : 'mediaFolder general advanced personal user player share network transcoding internetRadio podcast search musicCabinet'}"/>
-<div style="max-width:980px; line-height: 30px">
     <span style="font-size:22px;">
     <c:forTokens items="${categories}" delims=" " var="cat" varStatus="loopStatus">
         <c:choose>
@@ -34,5 +22,3 @@
     </c:forTokens>
     </span>
 </div>
-
-<p></p>
