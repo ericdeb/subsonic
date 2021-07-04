@@ -1,23 +1,33 @@
-<table>
+<table style="margin-bottom: 20px">
 	<c:forEach items="${model.artists}" var="artistRecommendation" varStatus="loopStatus">
         <c:if test="${loopStatus.count % model.artistGridWidth == 1}">
 	        <tr>
    	     </c:if>
 		<td style="vertical-align:top">
-			<a href="artist.view?id=${artistRecommendation.artistId}">
-				<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
-					<img width="126" height="126" src="${artistRecommendation.imageUrl}" alt="">
-				</div></div></div></div>
-				<div style="detail">
-					<div style="width:108px;float:left">
+			<div class="artistWrapper">
+				<a href="artist.view?id=${artistRecommendation.artistId}">
+					<c:choose>
+						<c:when test="${not empty artistRecommendation.imageUrl}">
+							<img width="126" height="126" src="${artistRecommendation.imageUrl}" alt="">
+						</c:when>
+						<c:otherwise>
+							<img width="126" height="126" src="icons/artist.png" alt="" style="opacity: 0.4; position: relative; top: 3px">
+						</c:otherwise>
+					</c:choose>	
+				</a>
+			</div>
+			<div style="margin-left: 5px; margin-bottom: 8px; margin-top: 3px;">
+				<div style="width: 126px; height: 18px; overflow:hidden">
+					<a href="artist.view?id=${artistRecommendation.artistId}">
 						${artistRecommendation.artistName}
-					</div>
-					<div style="width:18px;float:right">
-						<a href="javascript:noop()" onclick="top.playlist.onPlayTopTracks(${artistRecommendation.artistId}, 'P');">
-			                <img src="<spring:theme code="playImage"/>" alt="Play top tracks" title="Play top tracks">
-						</a>
-					</div>
+					</a>
 				</div>
+<!-- 				<div style="width:18px;float:right">
+					<a href="javascript:noop()" onclick="top.playlist.onPlayTopTracks(${artistRecommendation.artistId}, 'P');">
+		                <img src="<spring:theme code="playImage"/>" alt="Play top tracks" title="Play top tracks">
+					</a>
+				</div> -->
+			</div>
 			</a>
 		</td>
         <c:if test="${loopStatus.count % model.artistGridWidth == 0}">

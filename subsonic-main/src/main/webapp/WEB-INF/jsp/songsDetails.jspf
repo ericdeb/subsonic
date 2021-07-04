@@ -1,0 +1,72 @@
+<div class="bgcolor2" style="width:100%;padding-top:0.8em; padding-top:0.5em; margin-top: -15px">
+    <table style="white-space:nowrap;">
+        <tr style="white-space:nowrap;">
+            <td style="white-space:nowrap; padding-right: 4px"><span style="font-weight: bold">Select</span></td>
+            <td style="white-space:nowrap; padding-left:0.2em; padding-right: 4px"><a href="javascript:noop()" onclick="selectAll(true)">All</a></td>
+            <td style="white-space:nowrap; padding-left:0.2em;"><a href="javascript:noop()" onclick="selectAll(false)">None</a></td>
+			<td></td>
+			<td style="white-space:nowrap; padding-left:0.8em;"><span style="font-weight: bold">With Selected: </span></td>
+			<td><a id="vPlayTop" href="javascript:noop()" onclick="top.playlist.onPlay(getSelected(), 'P');" class="withSelectedOptions"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
+            <td><a id="vEnqueueTop" href="javascript:noop()" onclick="top.playlist.onPlay(getSelected(), 'E');" class="withSelectedOptions"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
+            <td><a id="vLastTop" href="javascript:noop()" onclick="top.playlist.onPlay(getSelected(), 'A');" class="withSelectedOptions"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
+            <td><a href="javascript:noop()" onclick="downloadSelected()" class="withSelectedOptions"><img src="<spring:theme code="downloadImage"/>"></a></td>
+        </tr>
+     </table>
+</div>
+
+<p id="empty" style="display: none"><em><fmt:message key="playlist.empty"/></em></p>
+
+<table style="border-collapse:collapse;white-space:nowrap; margin-top:7px; margin-bottom:20px">
+    <tbody id="playlistBody">
+        <c:forEach items="${model.mediaFiles}" var="mediaFile" varStatus="loopStatus" >
+            <tr id="pattern" style="margin:0;padding:0;border:0">
+
+                <td class="bgcolor2" style="padding-left: 0.1em; padding-right: 1em;"><input type="checkbox" class="songIndex checkbox">
+                    <input type="hidden" name="trackId" value="${mediaFile.id}"/></td>
+                
+                <td style="padding-right:0.25em"></td>
+
+                <c:if test="${model.visibility.trackNumberVisible}">
+                    <td style="padding-right:0.5em;text-align:right"><span class="detail" id="trackNumber">
+                        ${mediaFile.metaData.trackNumber}
+                    </span></td>
+                </c:if>
+
+                <td style="padding-right:1.25em">
+                    <img id="currentImage" src="<spring:theme code="currentImage"/>" alt="" style="display:none">
+                    <c:choose>
+                        <c:when test="${model.player.externalWithPlaylist}">
+                            <span id="title">${fn:escapeXml(mediaFile.title)}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a id="titleUrl" href="javascript:noop()" onclick="top.playlist.onPlay([${mediaFile.id}], 'P');">
+                                <str:truncateNicely upper="30">${fn:escapeXml(mediaFile.title)}</str:truncateNicely>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+
+                <c:if test="${model.visibility.artistVisible}"><td style="padding-right:1.25em"><a id="artistUrl" target="main"
+                href="artist.view?id=${mediaFile.metaData.artistId}"><str:truncateNicely upper="30">${fn:escapeXml(mediaFile.metaData.artist)}</str:truncateNicely></a></td></c:if>
+                <c:if test="${model.visibility.albumVisible}"><td style="padding-right:1.25em"><a id="albumUrl" target="main" href="artist.view?id=${mediaFile.metaData.artistId}&albumId=${mediaFile.metaData.albumId}">
+                <str:truncateNicely upper="30">${fn:escapeXml(mediaFile.metaData.album)}</str:truncateNicely></a></td></c:if>
+                
+                <c:if test="${model.visibility.composerVisible}"><td style="padding-right:1.25em"><span id="composer" class="detail">${fn:escapeXml(mediaFile.metaData.composer)}</span></td></c:if>
+                <c:if test="${model.visibility.genreVisible}"><td style="padding-right:1.25em"><span id="genre" class="detail">${mediaFile.metaData.genre}</span></td></c:if>
+                <c:if test="${model.visibility.yearVisible}"><td style="padding-right:1.25em"><span id="year" class="detail">${mediaFile.metaData.year}</span></td></c:if>
+
+                <c:if test="${empty model.playlistName}">
+                    <c:if test="${model.visibility.formatVisible}"><td style="padding-right:1.25em"><span id="format" class="detail">${fn:toLowerCase(mediaFile.metaData.format)}</span></td></c:if>
+                    <c:if test="${model.visibility.fileSizeVisible}"><td style="padding-right:1.25em;text-align:right;"><span id="fileSize" class="detail">Size</span></td></c:if>
+                </c:if>
+
+                <c:if test="${model.visibility.durationVisible}"><td style="padding-right:1.25em;text-align:right;"><span id="duration" class="detail">${mediaFile.metaData.durationAsString}</span></td></c:if>
+
+                <c:if test="${model.visibility.bitRateVisible}"><td style="padding-right:0.25em"><span id="bitRate" class="detail">${mediaFile.metaData.bitRate} Kbps ${mediaFile.metaData.variableBitRate ? "vbr" : ""}</span></td></c:if>
+               <td><a id="vPlay" href="javascript:noop()" onclick="top.playlist.onPlay([${mediaFile.id}], 'P');"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
+                <td ><a id="vEnqueue" href="javascript:noop()" onclick="top.playlist.onPlay([${mediaFile.id}], 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
+                <td><a id="vLast" href="javascript:noop()" onclick="top.playlist.onPlay([${mediaFile.id}], 'A');"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>

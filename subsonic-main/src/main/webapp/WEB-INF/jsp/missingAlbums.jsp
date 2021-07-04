@@ -1,24 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-
-<html><head>
-    <%@ include file="head.jspf" %>
-	<style type="text/css">
-		table td {
-		  border-right:solid 20px transparent;
-		}	
-	</style>
-</head>
-<body class="mainframe bgcolor1">
-<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
-
-<script type="text/javascript">
-	function search(page) {
-		$('#albums').load('missingAlbumsSearch.view?page=' + page + '&' + $('form').serialize());
-		window.scrollTo(0, 0);
-	}
-</script>
-
-<div style="padding:15px; width:80%">
+<div id="missingAlbumsWrapper" style="padding:15px; width:80%">
 
 <c:choose>
 	<c:when test="${model.isIndexBeingCreated}">
@@ -78,5 +58,3 @@
 </c:choose>
 
 </div>
-
-</body></html>
