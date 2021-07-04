@@ -8,4 +8,46 @@
 <c:set var="faviconImage"><spring:theme code="faviconImage"/></c:set>
 <link rel="stylesheet" href="<c:url value="/${styleSheet}"/>" type="text/css">
 <link rel="shortcut icon" href="<c:url value="/${faviconImage}"/>" type="text/css">
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap-responsive.css">
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap-fileupload.min.css">
+<link rel="stylesheet" type="text/css" href="style/custom.css">
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="script/all.js"></script>
+<script type="text/javascript" src="script/PlaylistCommands.js"></script>
+<script type="text/javascript" src="script/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap-fileupload.min.js"></script>
+
+<script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>    
+<script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/jwplayer.js"/>"></script>    
+
+<script type="text/javascript" src="<c:url value="/script/MainController.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/ServerRequestService.js"/>"></script>
+
+<script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/webfx/timer.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/webfx/slider.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/PlaylistCommands.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/PlaylistController.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/PlaylistView.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/SubsonicPlaylistService.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/SubsonicWebPlayer.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/SubsonicWebSlider.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/XBMCManager.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/XBMCPlaylistProxy.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/XBMCRequestHandler.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/XBMCRequestParamService.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/XBMCResponseHandler.js"/>"></script>
+
+
+
+<link type="text/css" rel="stylesheet" href="<c:url value="/script/webfx/luna.css"/>">
+
+
+
 <title>Subsonic</title>
