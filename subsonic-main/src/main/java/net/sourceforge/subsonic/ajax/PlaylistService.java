@@ -43,6 +43,8 @@ import net.sourceforge.subsonic.util.StringUtil;
 import org.directwebremoting.WebContextFactory;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import org.codehaus.jackson.map.*;
+
 import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
 
 /**
@@ -112,35 +114,142 @@ public class PlaylistService {
         return convert(request, player, serverSidePlaylist, offset);
     }
 
-    public PlaylistInfo play(List<Integer> ids, String mode) throws Exception {
-    	LOG.debug("starting play(" + ids + ", " + mode + ")");
+    private PlaylistInfo _play(List<Integer> ids, String mode, int position) throws Exception {
+        LOG.debug("starting play(" + ids + ", " + mode + ")");
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
 
         Player player = getCurrentPlayer(request, response);
-        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
-        for (int id : ids) {
-        	mediaFiles.add(mediaFileService.getMediaFile(id));
-        }
+        List<MediaFile> mediaFiles = getMediaFiles(ids);
+
         if (player.isWeb()) {
             removeVideoFiles(mediaFiles);
         }
-        player.getPlaylist().addFiles(mode, mediaFiles);
+        player.getPlaylist().addFiles(mode, mediaFiles, position);
         return convert(request, player, true);
+    }
+
+    public PlaylistInfo play(List<Integer> ids, String mode) throws Exception {
+        return _play(ids, mode, 0);
+    }
+
+    public PlaylistInfo insertFiles(List<Integer> ids, String mode, int position) throws Exception {
+        return _play(ids, mode, position);
+    }
+
+    private String buildMediaFileString(List<Integer> ids) {
+        // this is horrible.... will use JSON when get Java debugger up and running
+        StringBuilder tmp = new StringBuilder();
+
+        for (int i = 0; i < ids.size(); i++) {
+            tmp.append(mediaFileService.getMediaFile(ids.get(i)).toString());
+            if (i != (ids.size() - 1)) {
+                tmp.append("\"\"");
+            }
+        }
+        
+        return tmp.toString();
+    }
+
+    private List<MediaFile> getRandomSongs(List<Integer> ids) {
+        int count = settingsService.getRandomSongCount();
+        List<MediaFile> mediaFiles = new ArrayList<>();
+        Collections.shuffle(ids);
+        for (int i = 0; i < count && i < ids.size(); i++) {
+            mediaFiles.add(mediaFileService.getMediaFile(ids.get(i)));
+        }
+        return mediaFiles;
+    }   
+
+    private List<MediaFile> getMediaFiles(List<Integer> ids) {
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
+        for (int id : ids) {
+            mediaFiles.add(mediaFileService.getMediaFile(id));
+        }
+        return mediaFiles;
+    }
+
+    public String getTrackIdsFromPaths(List<String> paths) {
+        // this is horrible.... will use JSON when get Java debugger up and running
+        StringBuilder tmp = new StringBuilder();
+
+        for (int i = 0; i < paths.size(); i++) {
+            int trackID = mediaFileService.getMediaFile(paths.get(i)).getId();
+            tmp.append(Integer.toString(trackID));
+            if (i != (paths.size() - 1)) {
+                tmp.append("\"\"");
+            }
+        }
+        
+        return tmp.toString();
+    }
+
+    public String getPlaylistString() {
+        HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
+        HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
+        Player player = getCurrentPlayer(request, response);
+        MediaFile [] mediaFiles = player.getPlaylist().getFiles();
+
+        StringBuilder tmp = new StringBuilder();
+
+        for (int i = 0; i < mediaFiles.length; i++) {
+            tmp.append(mediaFiles[i].toString());
+            if (i != (mediaFiles.length - 1)) {
+                tmp.append("\"\"");
+            }
+        }
+        
+        return tmp.toString();
+        
+    }
+
+    public String getSongsString(List<Integer> ids, String mode) {
+        return buildMediaFileString(ids);
+    }
+
+    public String getRandomSongsString(List<Integer> ids, String mode) {
+        getRandomSongs(ids);
+        return buildMediaFileString(ids);
+    }
+
+    public String getArtistRadioString(int artistId) throws Exception {
+        List<Integer> trackIds = playlistService.getPlaylistForArtist(artistId,
+                settingsService.getArtistRadioArtistCount(),
+                settingsService.getArtistRadioTotalCount());
+        return buildMediaFileString(trackIds);
+    }
+
+    public String getTopTracksString(int artistId) throws Exception {
+        List<Integer> trackIds = playlistService.getTopTracksForArtist(artistId,
+                settingsService.getArtistTopTracksTotalCount());
+        return buildMediaFileString(trackIds);
+    }
+
+    public String getGenreRadioString(String [] tags) throws Exception {
+        List<Integer> trackIds = playlistService.getPlaylistForTags(tags,
+                settingsService.getGenreRadioArtistCount(),
+                settingsService.getGenreRadioTotalCount());
+        return buildMediaFileString(trackIds);
+    }
+
+    public String getGroupRadioString (String group) throws Exception {
+        List<Integer> trackIds = playlistService.getPlaylistForGroup(group,
+            settingsService.getGenreRadioArtistCount(),
+            settingsService.getGenreRadioTotalCount());
+        return buildMediaFileString(trackIds);
+    }
+
+    public String getRelatedArtistsSamplerString (int artistId, int totalCount) {
+        List<Integer> trackIds = playlistService.getPlaylistForRelatedArtists(
+                artistId, settingsService.getRelatedArtistsSamplerArtistCount(), totalCount);
+        return buildMediaFileString(trackIds);
     }
 
     public PlaylistInfo playRandom(List<Integer> ids, String mode) throws Exception {
     	LOG.debug("starting playRandom(" + ids + ", " + mode + ")");
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
-
-        int count = settingsService.getRandomSongCount();
-        List<MediaFile> mediaFiles = new ArrayList<>();
-        Collections.shuffle(ids);
-        for (int i = 0; i < count && i < ids.size(); i++) {
-        	mediaFiles.add(mediaFileService.getMediaFile(ids.get(i)));
-        }
-
+        List<MediaFile> mediaFiles = getRandomSongs(ids);
         Player player = getCurrentPlayer(request, response);
         player.getPlaylist().addFiles(mode, mediaFiles);
         return convert(request, player, true);
@@ -150,8 +259,8 @@ public class PlaylistService {
     	LOG.debug("starting playArtistRadio(" + artistId + ", " + mode + ")");
 
     	return getPlaylistInfo(mode, playlistService.getPlaylistForArtist(artistId,
-    			settingsService.getArtistRadioArtistCount(),
-    			settingsService.getArtistRadioTotalCount()));
+                settingsService.getArtistRadioArtistCount(),
+                settingsService.getArtistRadioTotalCount()));
     }
 
     public PlaylistInfo playTopTracks(int artistId, String mode) throws Exception {
@@ -381,11 +490,11 @@ public class PlaylistService {
             }
 
             String format = formatFormat(player, file);
-            entries.add(new PlaylistInfo.Entry(metaData.getTrackNumber(), metaData.getTitle(), metaData.getArtist(),
+            entries.add(new PlaylistInfo.Entry(metaData.getTrackNumber(), metaData.getTitle(), file.getId(), metaData.getArtist(),
             		metaData.getArtistId(), metaData.getAlbum(), metaData.getAlbumId(), metaData.getComposer(),
             		metaData.getGenre(), metaData.getYear(), formatBitRate(metaData), metaData.getDuration(),
             		metaData.getDurationAsString(), format, formatContentType(format),
-            		formatFileSize(metaData.getFileSize(), locale), streamUrl));
+            		formatFileSize(metaData.getFileSize(), locale), file.getPath(), streamUrl));
         }
         boolean isStopEnabled = playlist.getStatus() == Playlist.Status.PLAYING && !player.isExternalWithPlaylist();
         float gain = jukeboxService.getGain();

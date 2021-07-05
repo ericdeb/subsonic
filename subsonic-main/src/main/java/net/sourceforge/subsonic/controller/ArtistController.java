@@ -116,15 +116,15 @@ public class ArtistController extends ParameterizableViewController {
         	trackIds.addAll(album.getTrackIds());
         }
 
-        if (albums.size() > 3) {
-        	map.put("artistInfoMinimized", true);
-        	map.put("artistInfoImageSize", 63);
-        } else {
-        	if (albums.size() == 1) {
-        		albums.get(0).setSelected(true);
-        	}
-        	map.put("artistInfoImageSize", 126);
-        }
+        // if (albums.size() > 3) {
+        // 	map.put("artistInfoMinimized", true);
+        // 	map.put("artistInfoImageSize", 63);
+        // } else {
+        // 	if (albums.size() == 1) {
+        // 		albums.get(0).setSelected(true);
+        // 	}
+    	map.put("artistInfoImageSize", 180);
+        // }
     	for (int i = 0; selectedAlbumIds != null && i < selectedAlbumIds.length; i++) {
     		for (Album album : albums) {
     			if (album.getId() == NumberUtils.toInt(selectedAlbumIds[i], -1)) {

@@ -36,11 +36,7 @@ import net.sourceforge.subsonic.domain.InternetRadio;
 import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.ArtistIndexService;
-import net.sourceforge.subsonic.service.MediaFolderService;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.*;
 import net.sourceforge.subsonic.util.StringUtil;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -54,6 +50,8 @@ import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.TagService;
 
+import java.io.*;
+
 /**
  * Controller for the left index frame.
  *
@@ -66,6 +64,7 @@ public class LeftController extends ParameterizableViewController implements Las
     private PlayerService playerService;
     private ArtistIndexService artistIndexService;
     private MediaFolderService mediaFolderService;
+    private PlaylistService playlistService;
     
     private LibraryBrowserService libraryBrowserService;
     private LibraryUpdateService libraryUpdateService;
@@ -108,6 +107,14 @@ public class LeftController extends ParameterizableViewController implements Las
 
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
+        List<String> playlistNames = new ArrayList<String>();
+
+        if (playlistService.getPlaylistDirectory().exists()) {
+            File[] playlists = playlistService.getSavedPlaylists();
+            for (File file : playlists) {
+                playlistNames.add(file.getName());
+            }
+        }
         
         map.put("player", playerService.getPlayer(request, response));
         map.put("radios", settingsService.getAllInternetRadios());
@@ -147,6 +154,9 @@ public class LeftController extends ParameterizableViewController implements Las
             map.put("statistics", statistics);
             map.put("statisticsBytes", StringUtil.formatBytes(statistics.getTotalLengthInBytes(), locale));
             map.put("mediaFolders", mediaFolderService.getNonIndexedMediaFolders());
+            map.put("playlistDirectory", playlistService.getPlaylistDirectory());
+            map.put("playlistDirectoryExists", playlistService.getPlaylistDirectory().exists());
+            map.put("playlists", playlistNames);
         } else {
     		map.put("filebased", true);
         	List<MediaFolder> mediaFolders = mediaFolderService.getAllMediaFolders();
@@ -199,5 +209,9 @@ public class LeftController extends ParameterizableViewController implements Las
 	public void setTagService(TagService tagService) {
 		this.tagService = tagService;
 	}
+
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
+    }
 
 }

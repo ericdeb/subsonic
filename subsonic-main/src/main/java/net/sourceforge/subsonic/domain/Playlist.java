@@ -44,6 +44,7 @@ public class Playlist {
     public static final String PLAY = "P";
     public static final String ENQUEUE = "E";
     public static final String ADD = "A";
+    public static final String INSERT = "I";
 
     private static final Logger LOG = Logger.getLogger(Playlist.class);
 
@@ -182,6 +183,30 @@ public class Playlist {
     	this.index = files.indexOf(mediaFile);
     }
 
+
+    private synchronized void _addFiles(String mode, Iterable<MediaFile> mediaFiles, int insertPosition) {
+        makeBackup();
+        int insertIndex;
+        if (PLAY.equals(mode)) {
+            index = 0;
+            insertIndex = 0;
+            files.clear();
+        } else if (ENQUEUE.equals(mode)) {
+            insertIndex = Math.min(index + 1, files.size());
+        } else if (INSERT.equals(mode)) {
+            insertIndex = insertPosition;
+        } else { // ADD
+            insertIndex = files.size();
+        }
+        List<MediaFile> list = new ArrayList<MediaFile>();
+        for (MediaFile mediaFile : mediaFiles) {
+            list.add(mediaFile); // TODO : used to be recursive
+        }
+        files.addAll(insertIndex, list);
+        if (PLAY.equals(mode)) {
+            setStatus(Status.PLAYING);
+        }
+    }
     /**
      * Adds one or more music file to the playlist.  If a given file is a directory, all its children
      * will be added recursively.
@@ -191,25 +216,11 @@ public class Playlist {
      * @throws IOException If an I/O error occurs.
      */
     public synchronized void addFiles(String mode, Iterable<MediaFile> mediaFiles) throws IOException {
-        makeBackup();
-        int insertIndex;
-        if (PLAY.equals(mode)) {
-            index = 0;
-            insertIndex = 0;
-            files.clear();
-        } else if (ENQUEUE.equals(mode)) {
-        	insertIndex = Math.min(index + 1, files.size());
-        } else { // ADD
-        	insertIndex = files.size();
-        }
-        List<MediaFile> list = new ArrayList<MediaFile>();
-        for (MediaFile mediaFile : mediaFiles) {
-            list.add(mediaFile); // TODO : used to be recursive
-        }
-        files.addAll(insertIndex, list);
-        if (PLAY.equals(mode)) {
-        	setStatus(Status.PLAYING);
-        }
+        _addFiles(mode, mediaFiles, 0);
+    }
+
+    public synchronized void addFiles(String mode, Iterable<MediaFile> mediaFiles, int insertPosition) throws IOException {
+        _addFiles(mode, mediaFiles, insertPosition);
     }
 
     /**
@@ -404,7 +415,7 @@ public class Playlist {
         }
         return length;
     }
-
+    
     private void makeBackup() {
         filesBackup = new ArrayList<MediaFile>(files);
         indexBackup = index;

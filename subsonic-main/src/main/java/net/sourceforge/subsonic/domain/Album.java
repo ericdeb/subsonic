@@ -11,6 +11,7 @@ public class Album implements Comparable<Album> {
 
 	private int artistId;
 	private String artistName;
+	private String artistGenre;
 	private int id;
 	private String title;
 	private Short year;
@@ -81,6 +82,14 @@ public class Album implements Comparable<Album> {
 
 	public String getCoverArtUrl() {
 		return coverArtUrl;
+	}
+
+	public String getArtistGenre() {
+		return artistGenre;
+	}
+
+	public void setArtistGenre(String artistGenre) {
+		this.artistGenre = artistGenre;
 	}
 
 	public void setCoverArtUrl(String coverArtUrl) {

@@ -50,6 +50,7 @@ public class TopController extends ParameterizableViewController {
         User user = securityService.getCurrentUser(request);
 
         map.put("user", user);
+        map.put("admin", user.isAdminRole());
         map.put("mediaFoldersExist", !allMediaFolders.isEmpty());
         map.put("brand", settingsService.getBrand());
         map.put("licensed", settingsService.isLicenseValid());
