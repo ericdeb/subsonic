@@ -28,12 +28,18 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Collections;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.StringUtil;
+import net.sourceforge.subsonic.service.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
@@ -51,10 +57,10 @@ import org.jdom.input.SAXBuilder;
 public class PlaylistService {
 
     private static final Logger LOG = Logger.getLogger(PlaylistService.class);
-    private SettingsService settingsService;
-    private SecurityService securityService;
     private MediaFileService mediaFileService;
-
+    private SecurityService securityService;
+    private SettingsService settingsService;
+    
 
     /**
      * Saves the given playlist to persistent storage.
@@ -159,16 +165,16 @@ public class PlaylistService {
         }
     }
 
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
 
-    public void setmediaFileService(MediaFileService mediaFileService) {
-        this.mediaFileService = mediaFileService;
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
     }
 
     private static class PlaylistFilenameFilter implements FilenameFilter {

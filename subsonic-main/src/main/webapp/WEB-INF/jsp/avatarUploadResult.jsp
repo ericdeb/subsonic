@@ -1,10 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-
-<html>
-<head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 
 <h1>
     <img src="<spring:theme code="settingsImage"/>" alt=""/>
@@ -31,5 +25,4 @@
 
 <div class="back"><a href="personalSettings.view?"><fmt:message key="common.back"/></a></div>
 
-</body>
-</html>
+</div>

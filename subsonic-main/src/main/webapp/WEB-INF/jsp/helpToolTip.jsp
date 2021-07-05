@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 <%@ include file="include.jspf" %>
 
 <%--
@@ -11,8 +10,8 @@ PARAMETERS
 <spring:theme code="helpPopupImage" var="imageUrl"/>
 <fmt:message key="common.help" var="help"/>
 
-<div id="placeholder-${param.topic}" style="display:none">
-    <div style="font-weight:bold;"><fmt:message key="helppopup.${param.topic}.title"><fmt:param value="Subsonic"/></fmt:message></div>
-    <div><fmt:message key="helppopup.${param.topic}.text"><fmt:param value="Subsonic"/></fmt:message></div>
+<div style="display:none">
+    <div id="placeholderTitle-${param.topic}"><fmt:message key="helppopup.${param.topic}.title"><fmt:param value="Subsonic"/></fmt:message></div>
+    <div id="placeholderText-${param.topic}"><fmt:message key="helppopup.${param.topic}.text"><fmt:param value="Subsonic"/></fmt:message></div>
 </div>
-<img src="${imageUrl}" alt="${help}" title="${help}" onmouseover="TagToTip('placeholder-${param.topic}', BALLOON, true, ABOVE, true, OFFSETX, -17, PADDING, 8, WIDTH, -240, CLICKSTICKY, true, CLICKCLOSE, true)" onmouseout="UnTip()"/>
+<img id="toolTipImage-${param.topic}" src="${imageUrl}" alt="${help}" title="${help}" onload="setupToolTip('${param.topic}')"/>

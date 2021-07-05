@@ -11,7 +11,16 @@
 	<sub:param name="page" value="${model.page + 1}"/>
 </sub:url>
 
-<div style="padding-top:15px"/>
-
 <c:if test="${model.page > 0}"><div class="back"><a href="${prevUrl}"><fmt:message key="common.previous"/></a></div></c:if>
-<c:if test="${not empty model.morePages}"><div class="forward"><a href="${nextUrl}"><fmt:message key="common.next"/></a></div></c:if>
+<c:if test="${not empty model.morePages}">
+	<div class="forward">
+		<c:choose>
+			<c:when test="${model.listType ne 'random'}">
+				<a href="${nextUrl}">Next</a>
+			</c:when>
+			<c:otherwise>
+				<a href="${nextUrl}">More</a>
+			</c:otherwise>
+		</c:choose>
+	</div>
+</c:if>

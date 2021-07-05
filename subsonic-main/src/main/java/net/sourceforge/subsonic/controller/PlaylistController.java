@@ -31,9 +31,12 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.PlaylistService;
+import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Controller for the playlist frame.
@@ -45,6 +48,7 @@ public class PlaylistController extends ParameterizableViewController {
     private PlayerService playerService;
     private SecurityService securityService;
     private SettingsService settingsService;
+    private PlaylistService playlistService;
 
     private Logger LOG = Logger.getLogger(PlaylistController.class);
     
@@ -52,14 +56,29 @@ public class PlaylistController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
-        Player player = playerService.getPlayer(request, response);
+
+        String name = request.getParameter("name");
 
         Map<String, Object> map = new HashMap<String, Object>();
+
+        if (name != null) {
+            Player player = new Player();
+            Playlist playlist = player.getPlaylist();
+            playlistService.loadPlaylist(playlist, name);
+            map.put("playlistName", name.toString());
+        }
+        else {
+            Player player = playerService.getPlayer(request, response);
+            boolean xbmc = user.isAdminRole() && player.getShortDescription().equals("XBMC");
+            map.put("xbmc", String.valueOf(xbmc).toString());
+            map.put("player", player);
+        }
+
         map.put("user", user);
-        map.put("player", player);
         map.put("players", playerService.getPlayersForUserAndClientId(user.getUsername(), null));
         map.put("visibility", userSettings.getPlaylistVisibility());
         map.put("partyMode", userSettings.isPartyModeEnabled());
+
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
@@ -75,5 +94,9 @@ public class PlaylistController extends ParameterizableViewController {
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
+    }
+
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
     }
 }

@@ -86,7 +86,7 @@ public class GenresController extends ParameterizableViewController {
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
         boolean albumArtists = userSettings.isOnlyAlbumArtistRecommendations();
 
-        final int ARTISTS = userSettings.getDefaultHomeArtists();
+        final int ARTISTS = 24;
 		List<ArtistRecommendation> ars = square(genre != null ?
 				recService.getGenreArtistsInLibrary(genre, page * ARTISTS, ARTISTS + 1, albumArtists) :
 				recService.getGroupArtistsInLibrary(group, page * ARTISTS, ARTISTS + 1, albumArtists));
@@ -101,7 +101,7 @@ public class GenresController extends ParameterizableViewController {
 
 		map.put("page", page);
 		map.put("artists", ars);
-		map.put("artistGridWidth", userSettings.getArtistGridWidth());
+		map.put("artistGridWidth", 6);
     }
     
     private List<ArtistLink> getRecommendedArtists(String genre, String group, int amount, boolean onlyAlbumArtists) throws UnsupportedEncodingException {

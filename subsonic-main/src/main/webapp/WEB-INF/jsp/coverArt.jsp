@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 <%@ include file="include.jspf" %>
 
 <%--
@@ -36,7 +35,7 @@ PARAMETERS
 			<c:set var="zoomCoverArtUrl">${param.coverArtZoomUrl}</c:set>
 		</c:when>
 		<c:otherwise>
-		    <sub:url value="/coverArt.view" var="coverArtUrl">
+		    <sub:url value="icons/disc.png" var="coverArtUrl">
         		<c:if test="${not empty param.coverArtSize}"><sub:param name="size" value="${param.coverArtSize}"/></c:if>
         		<c:if test="${not empty param.coverArtPath}"><sub:param name="path" value="${param.coverArtPath}"/></c:if>
     		</sub:url>

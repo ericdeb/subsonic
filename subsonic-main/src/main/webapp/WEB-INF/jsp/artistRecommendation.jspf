@@ -1,9 +1,11 @@
 <c:if test="${not empty model.artistsNotInLibrary}">
-<br>
-<h1>You might also like:</h1>
-<ul>
+
+<div style="margin-top: 10px; font-size: 22px; clear: both; margin-left: 10px; font-weight: bold;">
+	<span>You might also like:</span>
+</div>
+<ul style="list-style-type: none; margin-top: 15px">
 	<c:forEach items="${model.artistsNotInLibrary}" var="recommendedArtist" varStatus="loopStatus">
-		<li><a href="http://last.fm/music/${recommendedArtist.artistURL}">${recommendedArtist.artistName}</a></li>
+		<li><a href="http://last.fm/music/${recommendedArtist.artistURL}" target="_blank">${recommendedArtist.artistName}</a></li>
 	</c:forEach>
 <ul>
 </c:if>

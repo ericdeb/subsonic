@@ -1,12 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%--@elvariable id="model" type="java.util.Map"--%>
+<div class="mainframe bgcolor1">
 
-<html><head>
-	<%@ include file="head.jspf" %>
-</head><body class="mainframe bgcolor1">
-
-<h1>${model.dir.name}</h1>
+	<h1>${model.dir.name}</h1>
 
 	<c:if test="${model.dir.root eq false}">
 		<sub:url value="main.view" var="parentUrl"><sub:param name="path" value="${model.dir.parent.path}"/></sub:url>
@@ -28,9 +22,9 @@
 
 	<c:if test="${fn:length(model.files) > 0}">
 		<h2>
-			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'P');">Play all</a> |
-			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'E');">Enqueue all</a> |
-			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'A');">Add all</a>
+			<a href="javascript:noop()" onclick="top.playlist.sendPlaylistCommand(P_CMDS.PLAY.TRACKS, ${model.trackIds}, P_MODES.PLAY);">Play all</a> |
+			<a href="javascript:noop()" onclick="top.playlist.sendPlaylistCommand(P_CMDS.PLAY.TRACKS, ${model.trackIds}, P_MODES.ENQUEUE);">Enqueue all</a> |
+			<a href="javascript:noop()" onclick="top.playlist.sendPlaylistCommand(P_CMDS.PLAY.TRACKS, ${model.trackIds}, P_MODES.ADD);">Add all</a>
 		</h2>
 		<table style="border-collapse:collapse;white-space:nowrap">
 			<c:forEach items="${model.files}" var="file" varStatus="loopStatus">
@@ -50,6 +44,4 @@
 			</c:forEach>
 		</table>
 	</c:if>
-
-</body>
-</html>
+</div>

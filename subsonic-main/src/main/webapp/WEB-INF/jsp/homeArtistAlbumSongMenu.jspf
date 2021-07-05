@@ -1,22 +1,45 @@
-<h3>
-    <c:forTokens items="Artists Albums Songs" delims=" " var="listGroup" varStatus="loopStatus">
-        <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
+<div class="homeSubLinksWrapper">
+    <div class="homeSubLinks">
+        <c:forTokens items="Artists Albums Songs" delims=" " var="listGroup" varStatus="loopStatus">
+            <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
+            <sub:url var="url" value="home.view">
+                <sub:param name="listType" value="${model.listType}"/>
+                <sub:param name="listGroup" value="${listGroup}"/>
+            </sub:url>
+
+            <c:choose>
+                <c:when test="${model.listGroup eq listGroup}">
+                    <span class="headerSelected">${listGroup}</span>
+                </c:when>
+                <c:otherwise>
+                    <a href="${url}">${listGroup}</a>
+                </c:otherwise>
+            </c:choose>
+
+        </c:forTokens>
+    </div>
+
+    <c:if test="${model.listType ne 'random'}">
         <sub:url var="url" value="home.view">
             <sub:param name="listType" value="${model.listType}"/>
-            <sub:param name="listGroup" value="${listGroup}"/>
+            <sub:param name="listGroup" value="${model.listGroup}"/>
+            <c:if test="${model.listUsers eq 'current'}">
+                <sub:param name="listUsers" value="all"/>
+            </c:if>
+            <c:if test="${model.listUsers eq 'all'}">
+                <sub:param name="listUsers" value="current"/>
+            </c:if>
         </sub:url>
-
-        <c:choose>
-            <c:when test="${model.listGroup eq listGroup}">
-                <span class="headerSelected">${listGroup}</span>
-            </c:when>
-            <c:otherwise>
-                <a href="${url}">${listGroup}</a>
-            </c:otherwise>
-        </c:choose>
-
-    </c:forTokens>
-</h3>
+        <div id="meEveryone">
+            <c:if test="${model.listUsers eq 'current'}">
+                <span style="color: #D01073">Me </span><span>| </span><a href="${url}">Everyone</a>
+            </c:if>
+            <c:if test="${model.listUsers eq 'all'}">
+                <a href="${url}">Me </a><span>| </span><span style="color: #D01073">Everyone</span>
+            </c:if>
+        </div>       
+    </c:if>
+</div>
 
 <c:if test="${model.listType ne 'random'}"><%@ include file="homeQuery.jspf" %></c:if>
 
@@ -24,18 +47,4 @@
 <c:if test="${model.listGroup eq 'Albums'}"><%@ include file="homeAlbums.jspf" %></c:if>
 <c:if test="${model.listGroup eq 'Artists'}"><%@ include file="homeArtists.jspf" %></c:if>
 
-<c:if test="${model.listType ne 'random'}">
-	<sub:url var="url" value="home.view">
-		<sub:param name="listType" value="${model.listType}"/>
-		<sub:param name="listGroup" value="${model.listGroup}"/>
-		<c:if test="${model.listUsers eq 'current'}">
-			<c:set var="target">For everyone</c:set>
-			<sub:param name="listUsers" value="all"/>
-		</c:if>
-		<c:if test="${model.listUsers eq 'all'}">
-			<c:set var="target">For me</c:set>
-			<sub:param name="listUsers" value="current"/>
-		</c:if>
-	</sub:url>
-	<div class="forward"><a href="${url}">${target}</a></div>	
-</c:if>
+
