@@ -24,10 +24,7 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.math.NumberUtils.toInt;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,11 +48,14 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
 import com.github.hakko.musiccabinet.domain.model.library.Period;
+import com.github.hakko.musiccabinet.domain.model.music.Tag;
 import com.github.hakko.musiccabinet.service.ArtistRecommendationService;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.StarService;
 import com.github.hakko.musiccabinet.service.lastfm.UserTopArtistsService;
+import com.github.hakko.musiccabinet.service.lastfm.ArtistTopTagsService;
+
 
 /**
  * Controller for the home page.
@@ -71,6 +71,7 @@ public class HomeController extends ParameterizableViewController {
     private LibraryUpdateService libraryUpdateService;
     private LibraryBrowserService libraryBrowserService;
     private MediaFileService mediaFileService;
+    private ArtistTopTagsService artistTopTagsService;
     private StarService starService;
 
     @Override
@@ -87,7 +88,7 @@ public class HomeController extends ParameterizableViewController {
         if (!libraryBrowserService.hasArtists()) {
             return new ModelAndView(new RedirectView("settings.view"));
         }
-
+        artistTopTagsService.getTopTags(164, 3);
         String listType = request.getParameter("listType");
         String listGroup = request.getParameter("listGroup");
         String listUsers = StringUtils.defaultIfEmpty(request.getParameter("listUsers"),
@@ -131,6 +132,7 @@ public class HomeController extends ParameterizableViewController {
         map.put("listGroup", listGroup);
         map.put("listUsers", listUsers);
         map.put("user", user);
+        map.put("admin", user.isAdminRole());
 		map.put("lastFmUser", userSettings.getLastFmUsername());
 
         ModelAndView result = super.handleRequestInternal(request, response);
@@ -171,7 +173,7 @@ public class HomeController extends ParameterizableViewController {
                 map.put("artistsNotInLibrary", getRecommendedArtistsNotInLibrary(lastFmUsername, userSettings));
     		}
     	}
-		map.put("artistGridWidth", userSettings.getArtistGridWidth());
+		map.put("artistGridWidth", 6);
     }
 
     private List<ArtistLink> getRecommendedArtistsNotInLibrary(String lastFmUsername, UserSettings userSettings) {
@@ -208,6 +210,26 @@ public class HomeController extends ParameterizableViewController {
     	return null;
     }
 
+    private List<Album> shiftNoCoverAlbumsToBottom(List<Album> albums) {
+
+        List<Album> sortedAlbums = new ArrayList();
+        List<Album> noCoverAlbums = new ArrayList();
+ 
+        for (int i = 0; i < albums.size(); i++) {
+            Album current = albums.get(i);
+            String art = current.getCoverArtUrl();
+            if (art != null && !art.isEmpty()) {
+                sortedAlbums.add(current);
+            }
+            else {
+                noCoverAlbums.add(current);
+            }
+        }
+
+        sortedAlbums.addAll(noCoverAlbums);
+        return sortedAlbums;
+    }
+
     private void setAlbums(String listType, String query, int page,
     		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	final int ALBUMS = userSettings.getDefaultHomeAlbums();
@@ -216,6 +238,22 @@ public class HomeController extends ParameterizableViewController {
     	List<Album> albums = mediaFileService.getAlbums(
     			getAlbums(listType, query, offset, limit, lastFmUsername));
 
+        albums = shiftNoCoverAlbumsToBottom(albums);
+
+        try {
+            for (int i = 0; i < albums.size(); i++) {
+                Album a = albums.get(i);
+                List<Tag> tags = artistTopTagsService.getTopTags(a.getArtistId(), 1);
+                if (!tags.isEmpty()) {
+                    a.setArtistGenre(tags.get(0).getName());
+                }
+                       
+            }
+        }
+        catch (Exception e) {
+            map.put("bad", e);
+        }
+
     	if (albums.size() > ALBUMS) {
     		map.put("morePages", true);
     		albums.remove(ALBUMS);
@@ -223,7 +261,7 @@ public class HomeController extends ParameterizableViewController {
     	map.put("page", page);
     	map.put("albums", albums);
         map.put("isAlbumStarred", starService.getStarredAlbumsMask(lastFmUsername, getAlbumIds(albums)));
-		map.put("artistGridWidth", userSettings.getArtistGridWidth());
+		map.put("artistGridWidth", 3);
 		map.put("albumGridLayout", userSettings.isAlbumGridLayout());
     }
 
@@ -298,6 +336,10 @@ public class HomeController extends ParameterizableViewController {
     public void setUserTopArtistsService(UserTopArtistsService userTopArtistsService) {
 		this.userTopArtistsService = userTopArtistsService;
 	}
+
+    public void setArtistTopTagsService(ArtistTopTagsService artistTopTagsService) {
+        this.artistTopTagsService = artistTopTagsService;
+    }
 
 	public void setArtistRecommendationService(ArtistRecommendationService artistRecommendationService) {
 		this.artistRecommendationService = artistRecommendationService;

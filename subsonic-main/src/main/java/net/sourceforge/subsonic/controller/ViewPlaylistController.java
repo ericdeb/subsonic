@@ -28,11 +28,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.domain.Playlist;
-import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.PlaylistService;
@@ -43,14 +41,13 @@ import net.sourceforge.subsonic.util.StringUtil;
  *
  * @author Sindre Mehus
  */
-public class PlaylistController extends ParameterizableViewController {
+public class ViewPlaylistController extends ParameterizableViewController {
 
-    private PlayerService playerService;
     private SecurityService securityService;
     private SettingsService settingsService;
     private PlaylistService playlistService;
 
-    private Logger LOG = Logger.getLogger(PlaylistController.class);
+    private Logger LOG = Logger.getLogger(ViewPlaylistController.class);
     
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -62,30 +59,18 @@ public class PlaylistController extends ParameterizableViewController {
         Map<String, Object> map = new HashMap<String, Object>();
 
         if (name != null) {
-            Player player = new Player();
-            Playlist playlist = player.getPlaylist();
-            playlistService.loadPlaylist(playlist, name);
-            map.put("playlistName", name.toString());
-        }
-        else {
-            Player player = playerService.getPlayer(request, response);
-            boolean xbmc = user.isAdminRole() && player.getShortDescription().equals("XBMC");
-            map.put("xbmc", String.valueOf(xbmc).toString());
-            map.put("player", player);
+            Playlist playlist = new Playlist();
+            playlistService.loadPlaylist(playlist, name);  
+            map.put("playlistName", name);  
+            map.put("trimmedName", name.substring(0, name.lastIndexOf('.')));   
         }
 
         map.put("user", user);
-        map.put("players", playerService.getPlayersForUserAndClientId(user.getUsername(), null));
         map.put("visibility", userSettings.getPlaylistVisibility());
-        map.put("partyMode", userSettings.isPartyModeEnabled());
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
-    }
-
-    public void setPlayerService(PlayerService playerService) {
-        this.playerService = playerService;
     }
 
     public void setSecurityService(SecurityService securityService) {

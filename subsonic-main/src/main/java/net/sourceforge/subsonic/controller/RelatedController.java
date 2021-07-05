@@ -63,7 +63,7 @@ public class RelatedController extends ParameterizableViewController {
         map.put("artist", artistInfo.getArtist().getName());
         map.put("artistInfo", artistInfo);
         map.put("artists", artistsInLibrary);
-        map.put("artistGridWidth", userSettings.getArtistGridWidth());
+        map.put("artistGridWidth", 5);
         map.put("artistsNotInLibrary", artistsNotInLibrary);
 
         ModelAndView result = super.handleRequestInternal(request, response);
