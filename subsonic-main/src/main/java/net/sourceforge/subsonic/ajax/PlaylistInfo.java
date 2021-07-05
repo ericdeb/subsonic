@@ -72,6 +72,7 @@ public class PlaylistInfo {
     public static class Entry {
         private final Integer trackNumber;
         private final String title;
+        private final int trackId;
         private final String artist;
         private final int artistId;
         private final String album;
@@ -85,12 +86,15 @@ public class PlaylistInfo {
         private final String format;
         private final String contentType;
         private final String fileSize;
+        private final String filePath;
         private final String streamUrl;
 
-        public Entry(Integer trackNumber, String title, String artist, int artistId, String album, int albumId,
+
+        public Entry(Integer trackNumber, String title, int trackId, String artist, int artistId, String album, int albumId,
         		String composer, String genre, String year, String bitRate, Integer duration, String durationAsString, 
-        		String format, String contentType, String fileSize, String streamUrl) {
+        		String format, String contentType, String fileSize, String filePath, String streamUrl) {
             this.trackNumber = trackNumber;
+            this.trackId = trackId;
             this.title = title;
             this.artist = artist;
             this.artistId = artistId;
@@ -105,11 +109,16 @@ public class PlaylistInfo {
             this.format = format;
             this.contentType = contentType;
             this.fileSize = fileSize;
+            this.filePath = filePath;
             this.streamUrl = streamUrl;
          }
 
         public Integer getTrackNumber() {
             return trackNumber;
+        }
+
+        public Integer getTrackId() {
+            return trackId;
         }
 
         public String getTitle() {
@@ -170,6 +179,10 @@ public class PlaylistInfo {
 
         public String getStreamUrl() {
             return streamUrl;
+        }
+
+        public String getFilePath() {
+            return filePath;
         }
     }
 
